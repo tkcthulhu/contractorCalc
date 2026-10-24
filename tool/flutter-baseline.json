@@ -1,0 +1,18 @@
+{
+  "version": "3.47.8",
+  "channel": "stable",
+  "revision": "737ba8f885dc774b53b442759999a312c9461e4e",
+  "dart_version": "3.13.7",
+  "archives": {
+    "linux-x64": {
+      "manifest": "releases_linux.json",
+      "path": "stable/linux/flutter_linux_3.47.8-stable.tar.xz",
+      "sha256": "baf7dcc5a3dbba60fe863bf493a6cf203195621f7786eaa5a1bba02cd0d87dd2"
+    },
+    "macos-arm64": {
+      "manifest": "releases_macos.json",
+      "path": "stable/macos/flutter_macos_arm64_3.47.8-stable.zip",
+      "sha256": "6114edc2dae3636cfefb7e4456a4510399ee856e324149b34dbacb509e329d05"
+    }
+  }
+}
