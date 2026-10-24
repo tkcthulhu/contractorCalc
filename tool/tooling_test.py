@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 import bootstrap_android
 import bootstrap_flutter
+import check_android
 import check_platforms
 import check_toolchain
 
@@ -119,6 +120,35 @@ class AndroidBootstrapTest(unittest.TestCase):
                     self.assertRaisesRegex(SystemExit, "Archive checksum mismatch"):
                 bootstrap_android.download({"sha256": "0" * 64}, archive)
             network.assert_not_called()
+
+
+class AndroidMetadataTest(unittest.TestCase):
+    def metadata(self, directory, identity, suffix=""):
+        path = Path(directory) / "package.xml"
+        path.write_text(
+            '<repository><localPackage path="' + identity + '">'
+            '<revision><major>36</major><minor>0</minor><micro>0</micro>'
+            + suffix + '</revision></localPackage></repository>'
+        )
+        return path
+
+    def test_package_revision_normalization(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.metadata(directory, "build-tools;36.0.0")
+            self.assertEqual(check_android.package_revision(path, "build-tools;36.0.0"), "36")
+            self.assertEqual(check_android.normalized_revision("36.0.0"), "36")
+
+    def test_foreign_package_identity_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.metadata(directory, "unexpected")
+            with self.assertRaisesRegex(ValueError, "Unexpected package identity"):
+                check_android.package_revision(path, "build-tools;36.0.0")
+
+    def test_preview_revision_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = self.metadata(directory, "build-tools;36.0.0", "<preview>1</preview>")
+            with self.assertRaisesRegex(ValueError, "Preview Android package"):
+                check_android.package_revision(path, "build-tools;36.0.0")
 
 
 class PlatformCheckTest(unittest.TestCase):
