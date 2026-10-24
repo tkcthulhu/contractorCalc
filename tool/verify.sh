@@ -8,7 +8,7 @@ python3 -m unittest discover -s tool -p '*_test.py' -v
 python3 tool/check_platforms.py
 flutter pub get --enforce-lockfile
 dart run build_runner build
-dart format --output=none --set-exit-if-changed lib test
+dart format --output=none --set-exit-if-changed lib test integration_test
 flutter analyze --no-pub
 flutter test --no-pub --reporter expanded
 
