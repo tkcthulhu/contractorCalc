@@ -29,13 +29,13 @@ Contractors and tradespeople performing job-site calculations.
 
 ### Dimensional math and conversions
 
-- Feet-inch-fraction, inch-fraction, and yard modes; decimal feet and decimal inches in tenths and hundredths.
-- Preset fraction resolution from 1/2 inch through 1/64 inch. Fraction resolution and decimal display precision affect presentation only; chained calculations retain unrounded values.
+- Feet-inch-fraction, inch-fraction, and yard modes; decimal feet and decimal inches in tenths and hundredths, defaulting to hundredths.
+- Preset fraction resolution from 1/2 inch through 1/64 inch. Display uses nearest rounding with exact ties away from zero. Fraction resolution and decimal display precision affect presentation only; chained calculations retain unrounded values.
 - Metric measurements in meters, centimeters, and millimeters, with imperial–metric conversion.
 - Length, area, and volume conversion between supported formats.
 - Degrees:minutes:seconds ↔ decimal degrees.
 - Weight-per-volume conversions, board feet, and total cost from a unit price.
-- Display values up to 19.9 billion, with an optional thousands separator and a unitless decimal display.
+- Display values up to 19.9 billion in normal notation, with scientific notation for larger valid values within the calculation engine's limits, an optional thousands separator, and a unitless decimal display.
 
 ### Right angles, roofs, and rafters
 
@@ -46,7 +46,7 @@ Contractors and tradespeople performing job-site calculations.
 
 ### Stairs
 
-- Riser and tread counts, riser height, and tread width.
+- Riser and tread counts, riser height, and tread width. The upper floor is the landing: N risers correspond to N−1 treads.
 - User-specified riser height limit, stringer length, and stair incline angle. Flag conflicts with user-supplied stair limits.
 - Stairwell opening, headroom, and floor thickness.
 
@@ -63,7 +63,7 @@ Contractors and tradespeople performing job-site calculations.
 - Concrete blocks and footings.
 - Column and cone area and volume.
 - Circle area, circumference, arcs, and segments, from basic to advanced calculations.
-- Polygons with equal sides.
+- Convex regular polygons with equal sides and equal angles.
 
 ### Trigonometry
 
@@ -82,16 +82,18 @@ Contractors and tradespeople performing job-site calculations.
 
 ### Usability
 
-- A calculator keypad for fast dimensional entry, plus labeled input forms and results for specialized tasks such as stairs and rafters.
+- A calculator keypad for fast dimensional entry, with algebraic precedence, parentheses, explicit multiplication and units, plus labeled input forms and results for specialized tasks such as stairs and rafters.
+- An offline first-launch imperial/metric choice, with units and display preferences editable afterward.
 - Paperless tape for reviewing recent entries.
 - User-configurable preferences, including fraction resolution and display formats.
-- Memory functions.
+- One unit-aware memory register with MS, MR, M+, M−, and MC; empty memory is distinct from stored zero.
 - Preferences, tape, and memory persist locally across app restarts. Users can explicitly clear tape and memory.
 
 ## Non-Functional Requirements
 
-- Support Android and iOS.
+- Support Android 7.0 / API 24 and later, and iOS 15.0 and later, within the selected toolchain's supported platforms.
 - Every listed calculation, preferences, paperless tape, and memory must work locally without internet access or sign-in.
+- Local data is excluded from automatic OS cloud backup. Uninstalling, clearing app data, or losing the device can lose local state; no cloud recovery is implied.
 
 ## Alternatives Considered
 

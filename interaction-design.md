@@ -1,7 +1,7 @@
 ---
 id: contractorcalc-interaction
 type: module-design
-status: draft
+status: active
 title: ContractorCalc — Calculator and Interaction Contracts
 parent: contractorcalc-architecture
 depends-on: [contractorcalc-architecture, contractorcalc-calculations]
@@ -19,9 +19,9 @@ This module owns entry, expression editing, memory commands, presentation prefer
 
 First launch offers an offline **Imperial / Metric** choice without permission prompts, sign-in, downloads, or a building-code jurisdiction. Imperial starts in feet-inch-fraction at 1/16 inch; metric starts in millimeters. Both start with decimal precision **two places**, angles in degrees, thousands separators off, and waste zero. Tenths remains a selectable decimal preference. Fraction denominators are 2, 4, 8, 16, 32, or 64. Unit choice and individual display preferences remain editable after setup.
 
-The platform locale supplies the decimal symbol and grouping presentation, not unit-system inference. Keypad tokens are structured. Forms accept the active locale's decimal symbol, an optional leading sign, and digits; reject grouping separators, alternate ambiguous separators, and mixed-locale text with a field-specific message. A displayed number is never reparsed for calculation. A storage failure during setup permits an explicitly temporary session choice; it does not mark setup durably complete or silently replace existing unreadable preferences.
+The platform locale supplies the decimal symbol and grouping presentation, not unit-system inference. Keypad tokens are structured. Numeric fields accept digits, at most one active-locale decimal symbol, an optional leading sign, and an optional e/E exponent within the calculation contract's limits. Bound raw numeric-field text to 256 Unicode scalar values before parsing; structured fraction components use integer fields. Reject grouping separators, alternate ambiguous separators, and mixed-locale text with a field-specific message. A displayed number is never reparsed for calculation. A storage failure during setup permits an explicitly temporary session choice; it does not mark setup durably complete or silently replace existing unreadable preferences.
 
-Decimal output rounds to the selected one or two places, with two places the default, including trailing zeros. Fraction output rounds to the selected inch increment, reduces the fraction, and carries inches/feet correctly. Nearest rounding uses exact ties **away from zero**, applied to the signed quantity as a whole. Formatting a small negative value as zero removes the minus sign. Display rounding never changes calculations, memory, tape data, or purchase counts.
+Decimal output rounds to the selected one or two places, with two places the default, including trailing zeros. Fraction output rounds to the selected inch increment, reduces the fraction, and carries inches/feet correctly. Nearest rounding uses exact ties **away from zero**, applied to the signed quantity as a whole. Formatting a small negative value as zero removes the minus sign. Display rounding never changes calculations, memory, tape data, or purchase counts. DMS seconds use the selected decimal precision with carry. Unitless-decimal mode formats scalar arithmetic; it never strips a dimensional result's type. If a dimensional result is shown while that mode is selected, use explicitly labeled canonical decimal units instead.
 
 At absolute selected-unit magnitude above 19,900,000,000, use scientific notation with eight significant digits and an explicit unit. In compound feet-inch mode, use decimal feet for this fallback and label it. A nonzero value that would display as zero at the selected precision receives a visible smaller-than-one-display-increment indication and access to scientific notation; do not imply the stored quantity is zero.
 

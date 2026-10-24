@@ -1,7 +1,7 @@
 ---
 id: contractorcalc-persistence
 type: module-design
-status: draft
+status: active
 title: ContractorCalc — Local Schema and State Transitions
 parent: contractorcalc-architecture
 depends-on: [contractorcalc-architecture, contractorcalc-calculations]
@@ -30,6 +30,8 @@ Quantity codec version **1** is a validated tagged JSON object:
 - Binary64: `bits` exactly 16 lowercase hexadecimal digits encoding IEEE-754 bits in big-endian order; reject NaN/infinity, normalize negative zero to positive zero, and validate numerical bounds. Decode bits, not locale-dependent decimal text.
 - Cost/price kinds additionally require `currency_label`, a nonempty plain-text label of at most 16 Unicode scalar values, default `currency units`; reject it on other kinds. There is no exchange operation.
 
+Command-hash envelope v1 has exactly `v` (1), `action`, `expected_counter` (canonical nonnegative decimal string), and `payload` (validated object). Actions are `tape.clear`, `memory.store`, `memory.add`, `memory.subtract`, `memory.clear`, `config.update`, `preset.replace`, or `preset.reset`. Empty-action payloads are empty objects; values/targets are explicit in nonempty payloads. Canonical encoding sorts ASCII schema keys ascending at every level, preserves array order and Unicode scalar values, emits compact UTF-8 JSON with no whitespace, escapes quote/backslash/control characters only (controls as lowercase four-digit Unicode escapes), and emits small integer settings in minimal decimal notation. No binary floating-point JSON numbers occur: quantity values use the codec above, and counters use strings. Freeze the envelope for a retry; a new expected counter is a new explicit operation, not an automatic reassertion.
+
 Canonical units follow `contractorcalc-calculations`; a quantity does not carry a second conflicting numeric display-unit value. The UI can request another compatible display unit without changing serialization. Codecs reject unknown discriminators, missing/extra fields, invalid strings/types and unsupported versions, rather than coercing them. Exact quantities never pass through JSON floating-point numbers or SQLite REAL.
 
 ## Schema v1
@@ -52,7 +54,7 @@ No per-row revision is duplicated here; configuration writes compare/increment `
 
 ### `memory` — independent one-slot quantity
 
-`slot TEXT PRIMARY KEY CHECK(slot='M')`; `quantity_json TEXT` constrained to a JSON object and at most 16,384 UTF-8 bytes. An absent row is empty memory; a present zero quantity is populated memory. There is no FK to tape: clearing history cannot delete memory. The core codec validates quantity kind/value and compatibility. Memory row contents are mutable only through the register coordinator and are governed by `app_state.memory_revision`.
+`slot TEXT PRIMARY KEY CHECK(slot='M')`; `quantity_json TEXT` constrained to a JSON object and at most 16,384 UTF-8 bytes. An absent row is empty memory; a present zero quantity is populated memory. There is no FK to tape: clearing history cannot delete memory. The persistence codec delegates numerical/kind validation and compatibility to core value objects; it does not own another arithmetic implementation. Memory row contents are mutable only through the register coordinator and are governed by `app_state.memory_revision`.
 
 ### `tape_entries` — immutable variable calculation snapshots
 

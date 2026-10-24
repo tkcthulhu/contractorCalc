@@ -1,7 +1,7 @@
 ---
 id: contractorcalc-toolchain
 type: module-design
-status: draft
+status: active
 title: ContractorCalc — Pinned Toolchain and Platform Baseline
 parent: contractorcalc-architecture
 depends-on: [contractorcalc-architecture]

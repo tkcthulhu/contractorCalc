@@ -6,6 +6,7 @@ title: ContractorCalc — Architecture and Tech Stack
 parent: contractorcalc-goals
 depends-on: [contractorcalc-goals]
 tags: [offline, mobile, architecture, persistence]
+references: [contractorcalc-interaction, contractorcalc-calculations, contractorcalc-persistence, contractorcalc-toolchain]
 ---
 
 # ContractorCalc architecture
@@ -70,15 +71,9 @@ Dependencies point inward: presentation uses application controllers; controller
 
 ## Numerical integrity
 
-Fractional and decimal measurements are parsed directly to normalized rational values with arbitrary-precision integer numerator and denominator. Denominators are nonzero and normalized positive. Decimal input must not first pass through binary floating point. Canonical units and exact defined conversion factors permit exact dimensional conversions and rational arithmetic.
+The core distinguishes exact rational arithmetic from finite binary64 approximation; display formatting never rounds values used for calculations, tape or memory. Quantities retain dimensional meaning independently of display units. This does not claim that irrational results are exact or arbitrary-precision computation has unlimited cost.
 
-Use exact results where the operation supports them. Roots, trigonometry, and other inexact operations may produce binary64 approximations; subsequent calculations retain that approximation at computational precision without display rounding. This does not claim that irrational results are exact. Exact and approximate representations are distinguished explicitly.
-
-Quantities carry dimensional meaning separately from their display unit. Length, area, volume, angles, unitless values, and other supported quantities cannot be interchanged by interpreting a label or dropping units. Memory and tape preserve quantity types and numerical representation.
-
-Exact rationals are serialized as numerator/denominator decimal strings with a representation discriminator, not SQLite integer products or rounded display text. Finite approximate values use a tagged round-trip-safe representation. Deserialization validates the representation and quantity type; malformed data is not coerced to zero.
-
-The 19.9-billion display requirement is not assumed to define every intermediate numeric bound. Arbitrary-precision integers also do not imply unlimited input complexity. Input/range limits, approximation tolerances, discontinuity handling, rounding ties, and display overflow behavior require numerical contracts before affected calculations are implemented.
+`contractorcalc-calculations` in [calculation-design.md](calculation-design.md) owns exact unit definitions, numeric/complexity limits, domains/tolerances, typed failures, solver conventions and acceptance examples. `contractorcalc-interaction` in [interaction-design.md](interaction-design.md) owns display rounding, scientific-notation fallback and expression/key behavior. `contractorcalc-persistence` in [persistence-design.md](persistence-design.md) owns the validated quantity codec. Neither serializer nor UI reconstructs a competing numerical truth.
 
 ## Durable local state
 
@@ -86,7 +81,7 @@ One schema-versioned SQLite database stores these categories:
 
 - **Preferences:** typed settings, including display choices. Apply defaults for verified absent settings, not for failed reads.
 - **Tape:** ordered operation snapshots with typed inputs/results, relevant assumption values, and a calculation-version identifier. App upgrades do not silently recompute historical results. Retain saved entries until explicit user clearing; paginate reads rather than loading the entire history. There is no automatic count- or age-based deletion.
-- **Memory:** typed, unrounded quantities. Empty memory and a stored zero are distinct. Memory-key and register semantics are defined separately from storage.
+- **Memory:** one register of typed, unrounded quantities. Empty memory and a stored zero are distinct; interaction owns its MS/MR/M+/M−/MC semantics.
 - **Preset overrides:** user-supplied assumptions separate from bundled definitions.
 
 Tape is review history, not a universal event store or an implied undo mechanism. Durable draft restoration and tape replay are not introduced by this architecture.
@@ -116,11 +111,13 @@ Architecture selection does not authorize check execution. Implementation accept
 
 The pure core uses normally discovered Dart tests; widgets and application controllers use Flutter tests; persistence checks run against SQLite; device workflows use Flutter integration testing and platform accessibility inspection. Exact commands and fixtures are bound when the application/tooling exists. Android evidence does not substitute for iOS evidence, and successful compilation does not establish offline workflows or persistence.
 
-Flutter/dependency versions and minimum Android/iOS versions must be pinned after compatibility review, including SQLite native packaging. Building, signing, and running iOS simulator workflows requires macOS/Xcode access. This is a build/verification prerequisite, not a runtime internet requirement.
+`contractorcalc-toolchain` in [toolchain-design.md](toolchain-design.md) owns the exact Flutter/dependency/native-tool selections, supported deployment baseline, source identities and future bootstrap/device gates. Published constraint review is distinct from a resolved lockfile or native build. macOS/Xcode access and actual minimum-family devices remain verification prerequisites, not runtime internet requirements.
 
 ## Design boundary
 
-This decision settles stack, ownership, numerical representation strategy, local persistence topology, tape retention, and degraded-storage behavior. It does not settle detailed keypad/operator behavior, memory register/key semantics, exact database schema, solver conventions, numeric bounds/tolerances, or dependency/OS version pins. Those contracts require approval before their implementation; no module may fill the gaps by silently inventing product behavior.
+This spec owns topology, stack rationale and cross-module invariants. The linked interaction, calculation, persistence and toolchain specs own their detailed contracts; their lifecycle status records whether review is complete. The core remains a pure Dart library within one Flutter application, not a separately published package with an independent dependency graph. Calculation code belongs under `lib/core`, orchestration under `lib/application`, Flutter features under `lib/features`, and adapters under `lib/data`; these are intended dependency boundaries, not directories already implemented.
+
+Design approval is not implementation, installation, execution or branch/PR-closeout authority. [implementation-readiness.md](implementation-readiness.md) records design review and separates remaining execution/acceptance gates from unresolved product decisions. No implementation slice may invent missing behavior or silently weaken a contract.
 
 ## Technical references
 
