@@ -1,7 +1,7 @@
 ---
 id: contractorcalc-goals
 type: goal-and-requirements
-status: draft
+status: active
 title: ContractorCalc — Goal and Requirements
 ---
 
