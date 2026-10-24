@@ -62,8 +62,19 @@ workflow exists.
 
 Core tests currently guard import boundaries, **not calculator correctness**.
 Widget tests cover the real composition root and small-screen/large-text shell.
-`test/persistence/` and `integration_test/` contain coverage notes, not passing
-placeholder acceptance tests.
+`test/persistence/` reserves real storage coverage. The separate
+`integration_test/android_bootstrap_test.dart` checks the Android shell and
+in-memory native SQLite; it is not a placeholder for full device acceptance.
+
+### Android on this Linux machine
+
+The checkout-local JDK, Android SDK/NDK/CMake and dedicated API 36 x86_64 AVD have
+been provisioned. The debug app and Android shell/SQLite bootstrap test have run
+successfully. No Android Studio or global installation is needed. Follow
+[the Android development guide](docs/android-development.md) for the verified
+build commands, dedicated foreground ADB/emulator setup, target identity checks,
+license-safe fresh provisioning, evidence and shutdown instructions. Processes
+were stopped at handoff; the synthetic AVD/tools remain available for reuse.
 
 ### Running on mobile
 
@@ -74,7 +85,7 @@ spec and verifying a target device:
 source tool/env.sh
 python3 tool/check_toolchain.py
 flutter devices
-flutter run -d <verified-device-id>
+flutter run -d "${VERIFIED_DEVICE_ID:?Set the verified target ID first}"
 ```
 
 The development identity is `com.example.contractorcalc` on both platforms; it
@@ -82,26 +93,30 @@ is not a production domain/store identity. Android minimum API is **24**; iOS
 minimum is **15.0**. Only Android/iOS projects are generated—desktop hosts are not
 product platforms.
 
-Native builds are not yet verified. Android needs the pinned JDK/SDK/NDK;
-iOS needs the selected macOS/Xcode host. The release configuration has no signing
-setup and does not silently sign with debug keys. Native SQLite packaging,
-Android 16 KB compatibility, both release ABIs, minimum-platform installation,
-offline workflows, restart durability, and screen-reader testing remain required
-acceptance gates in the owning specs. A Linux widget run proves none of them.
+Android x86_64 **debug** build/install/launch and bundled SQLite **3.54.1** runtime
+smoke are verified. This does not prove release/native ABI packaging or reliable
+emulator startup; observed system ANRs and a launch-wait timeout remain disclosed
+in the [delivery record](implementation-readiness.md). iOS still needs the
+selected Mac/Xcode host. Release signing is unconfigured and never silently uses
+debug keys. Android 16 KB compatibility, both release ABIs, minimum/current
+acceptance targets, full offline workflows, restart durability, backup behavior
+and screen-reader testing remain required gates in the owning specs.
 
 Android cloud backup and device transfer are disabled by manifest and explicit
-exclusion rules, pending device verification. No database exists. The storage
-slice must set and test iOS's backup-exclusion resource attribute on the actual
-`CCData` directory **before** creating local data. No cloud recovery is promised.
+exclusion rules, pending device verification. No durable application database
+exists. The storage slice must set and test iOS's backup-exclusion resource
+attribute on the actual `CCData` directory **before** creating local data.
+No cloud recovery is promised.
 
 ### Local resources
 
-`.toolchain/` holds the verified archive and SDK. `.local/` holds package/build
-caches and task-local command evidence; both are ignored by Git. These are not
-application user data. No automatic cleanup is installed. Before removing bulk,
-ensure no commands use it and preserve any needed evidence; the SDK/cache can be
-recreated from the retained baseline and lockfile. Losing the only SDK copy
-requires another download, not a global fallback.
+`.toolchain/` holds verified SDK/JDK tools and archives. `.local/` holds
+package/build caches, the synthetic AVD and task-local command evidence; both
+are ignored by Git. These are not application user data. No automatic cleanup
+is installed. Before removing bulk, ensure no commands use it and preserve unique
+evidence. Retained baselines, locks and download metadata support reconstruction;
+stop rather than substitute unavailable pinned tools. Losing the only SDK copy
+requires another verified download, not a global fallback.
 
 ## Architecture and contracts
 
