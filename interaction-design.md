@@ -49,7 +49,7 @@ A register is empty or contains one unrounded typed quantity. Display an M indic
 - **MR:** insert the stored quantity as one expression operand, replacing the active operand or starting a new expression after a result. Preserve its type/value and current display preferences. Empty MR is a visible empty-memory no-op, not insertion of zero.
 - **M+:** if empty, store the quantity; otherwise add only a compatible quantity using core arithmetic.
 - **M−:** if empty, store its negation; otherwise subtract only a compatible quantity using core arithmetic.
-- **MC:** explicitly clear the register, independently of tape and preferences. Clearing already-empty memory is a successful no-op.
+- **MC:** explicitly clear the register, independently of tape and preferences. Clearing already-empty memory leaves its contents unchanged; the persistence clear barrier still advances to invalidate an earlier pending write.
 
 A dimensional/domain/range rejection leaves memory untouched. A storage failure reports that memory did not save; it does not promote a temporary replacement into the durable register. Disable mutation when saved memory could not be read; do not treat an unreadable register as empty. MR is unavailable when the saved register could not be read; a last-known display may remain labeled stale but is not silently inserted as current memory. Memory commands are not separate tape calculations; their persisted state is the register, not an implied memory event ledger.
 

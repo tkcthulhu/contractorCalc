@@ -75,7 +75,7 @@ For a common rafter with incline α, a plumb plane has horizontal normal along i
 
 ## Straight stairs
 
-The upper floor is the landing. Total finished-floor rise H > 0 and a supplied riser count N ≥ 2 give riser h=H/N and tread count T=N−1. Alternatively a supplied maximum riser hmax > 0 chooses N=max(2,ceil(H/hmax)); no code-derived hmax is assumed. Explicit N is never silently changed to satisfy hmax; return `riser_limit_conflict` if h exceeds it.
+The upper floor is the landing. Total finished-floor rise H > 0 and a supplied integer riser count N in 2…10,000 give riser h=H/N and tread count T=N−1. Alternatively a supplied maximum riser hmax > 0 chooses N=max(2,ceil(H/hmax)), refusing a count above 10,000; no code-derived hmax is assumed. Explicit N is never silently changed to satisfy hmax; return `riser_limit_conflict` if h exceeds it.
 
 After N is selected, exactly one independent going mode is supplied: tread going g > 0; total going G > 0, giving g=G/T; incline θ in (0°,90°), giving g=h/tan θ; or theoretical pitch-line stringer L > H, giving g=√(L²−H²)/N. Return G=Tg, virtual pitch-line run P=Ng, incline atan(h/g), and theoretical stringer L=√(H²+P²). The distinction between G and P is explicit. Theoretical stringer length excludes fastening, bearing, tread/riser thickness, nosing and stock trimming allowances; it is not a finished cut length. An optional user maximum stringer length flags a conflict without changing the chosen layout.
 
@@ -102,7 +102,7 @@ Every estimate starts from supplied nonnegative net area or volume. Rectangular 
 - Density conversion modes accept exactly two of mass M ≥ 0, volume V > 0, and density ρ > 0: M=ρV, V=M/ρ, or ρ=M/V. A supplied zero mass can produce zero volume, but cannot establish a positive material density; report the invalid density rather than divide by zero.
 - Gravel: adjusted volume × selected bulk density gives mass. Initial density estimates are dry gravel 1680 kg/m³ and wet gravel 2000 kg/m³, with moisture/compaction variation disclosed and supplier replacement encouraged. Select US short tons or metric tonnes explicitly. No extra compaction multiplier is added.
 - Board feet: volume/(144 in³), equivalently thickness_inches × width_inches × length_feet /12. Dimensions are actual entered values, not inferred dressed/nominal lumber sizes.
-- Total cost: supplied quantity or purchase count × entered price per the same explicit unit basis. Distinguish theoretical-quantity cost from whole-unit-purchase cost; do not apply waste or ceiling twice. Currency labels are metadata, not an exchange-rate service; cost display uses the selected decimal precision without rounding intermediate arithmetic.
+- Total cost: supplied nonnegative quantity or purchase count × nonnegative entered price per the same explicit unit basis. Distinguish theoretical-quantity cost from whole-unit-purchase cost; do not apply waste or ceiling twice. Currency labels are metadata, not an exchange-rate service; cost display uses the selected decimal precision without rounding intermediate arithmetic.
 
 Preset identity, catalog version, source/estimate label, resolved numerical values, units and any user override are included in the calculation's assumption snapshot. Defaults are estimates and cannot be presented as supplier-verified facts. Resetting an override changes future calculations only, never past tape results.
 

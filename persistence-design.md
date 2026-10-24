@@ -90,7 +90,7 @@ Overrides are labeled user-provided/unverified, regardless of a supplier name ty
 
 ### Save a calculation
 
-At evaluation start, capture current tape generation and a coherent resolved configuration/preset snapshot. The pure calculation can finish without storage. Encode and validate the complete successful snapshot before entering the write transaction. Under the single writer:
+At evaluation start, capture current tape generation and a coherent resolved configuration/preset snapshot from a successful saved-state read. If that read is unavailable, do not substitute generation zero: calculate with explicit temporary choices and do not queue an automatic save. The pure calculation can finish without storage. Encode and validate the complete successful snapshot before entering the write transaction. Under the single writer:
 
 1. Check the operation ID for a prior matching saved snapshot. Return its saved seq for the same operation; a conflicting reuse is an integrity error, not replacement.
 2. Require the captured generation to equal current `app_state.tape_generation`; otherwise return `history_cleared`, without appending a late pre-clear calculation.
