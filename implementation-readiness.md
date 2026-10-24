@@ -27,8 +27,8 @@ The earlier approved decisions remain: Flutter/Dart, Riverpod, Drift/native SQLi
 ## Current checkpoint
 
 - Implementation has not started. Module contracts are being drafted for user review; draft status is not approval.
-- Contract owners: `contractorcalc-interaction` / `interaction-design.md`; `contractorcalc-calculations` / `calculation-design.md`. Persistence and toolchain contracts follow before final reconciliation.
-- Current action: finish numerical and specialized-solver definitions, then define storage schema and published toolchain compatibility. Consequential conventions not already approved require review before activation.
+- Draft contract owners: `contractorcalc-interaction` / `interaction-design.md`; `contractorcalc-calculations` / `calculation-design.md`; `contractorcalc-persistence` / `persistence-design.md`.
+- Interaction, numerical/solver and concrete schema/transition drafts are present. Current action: check published toolchain/package compatibility, then perform cross-spec review and obtain final user design approval. Consequential draft policies not already approved are not active contracts.
 - This record owns progress/evidence. Durable contracts live only in their owning specs.
 
 ## Gates
@@ -49,4 +49,6 @@ No application processes, test databases, installations, downloaded SDK archives
 
 ## Checkpoint history
 
-- **2026-10-24:** inspected baseline and complete current specs; obtained the amendments above; created draft calculation/interaction graph nodes. Drafting and final design review remain in progress.
+- **2026-10-24:** inspected baseline and complete current specs; obtained the amendments above; created draft calculation/interaction graph nodes.
+- **2026-10-24:** drafted all required calculation families and expression/memory behavior. Spec graph and draft whitespace/local-link checks passed. Source browsing supports definitions; no mathematical/application tests were executed.
+- **2026-10-24:** drafted schema v1, strict quantity codecs, generation/revision barriers, current-operation receipts, transaction/refusal rules and SQLite acceptance cases. Toolchain metadata review and final user design review remain pending.

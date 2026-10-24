@@ -4,8 +4,9 @@ type: module-design
 status: draft
 title: ContractorCalc — Calculator and Interaction Contracts
 parent: contractorcalc-architecture
-depends-on: [contractorcalc-architecture]
+depends-on: [contractorcalc-architecture, contractorcalc-calculations]
 tags: [calculator, interaction]
+references: [contractorcalc-persistence]
 ---
 
 # Calculator and interaction contracts
