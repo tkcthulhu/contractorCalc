@@ -7,6 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
+import bootstrap_android
 import bootstrap_flutter
 import check_platforms
 import check_toolchain
@@ -89,6 +90,35 @@ class BootstrapTest(unittest.TestCase):
                 bootstrap_flutter.main()
             extract.assert_not_called()
             self.assertFalse((root / ".toolchain/flutter").exists())
+
+
+class AndroidBootstrapTest(unittest.TestCase):
+    def test_sdk_license_acceptance_is_never_implicit(self):
+        with patch("sys.argv", ["bootstrap_android.py"]), \
+                patch("bootstrap_android.platform.system", return_value="Linux"), \
+                patch("bootstrap_android.platform.machine", return_value="x86_64"), \
+                patch("bootstrap_android.urllib.request.urlopen") as network, \
+                self.assertRaisesRegex(SystemExit, "Review the Android SDK License"):
+            bootstrap_android.main()
+        network.assert_not_called()
+
+    def test_changed_license_requires_new_review(self):
+        repository = b'<root><license id="android-sdk-license">changed</license></root>'
+        with patch("sys.argv", ["bootstrap_android.py", "--accept-sdk-license"]), \
+                patch("bootstrap_android.platform.system", return_value="Linux"), \
+                patch("bootstrap_android.platform.machine", return_value="x86_64"), \
+                patch("bootstrap_android.urllib.request.urlopen", return_value=io.BytesIO(repository)), \
+                self.assertRaisesRegex(SystemExit, "SDK license text changed"):
+            bootstrap_android.main()
+
+    def test_cached_corrupt_archive_is_refused_without_download(self):
+        with tempfile.TemporaryDirectory() as directory:
+            archive = Path(directory) / "archive.zip"
+            archive.write_bytes(b"corrupt")
+            with patch("bootstrap_android.urllib.request.urlopen") as network, \
+                    self.assertRaisesRegex(SystemExit, "Archive checksum mismatch"):
+                bootstrap_android.download({"sha256": "0" * 64}, archive)
+            network.assert_not_called()
 
 
 class PlatformCheckTest(unittest.TestCase):
