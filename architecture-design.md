@@ -11,7 +11,7 @@ references: [contractorcalc-interaction, contractorcalc-calculations, contractor
 
 # ContractorCalc architecture
 
-This is the approved architecture and stack selection, not an implementation record or authorization to build. Product scope and capabilities are owned by `contractorcalc-goals` in [goal-and-requirements.md](goal-and-requirements.md).
+This is the approved architecture and stack selection governing the application foundation and subsequent feature work, not evidence that the complete product is implemented or authorization for new execution. Product scope and capabilities are owned by `contractorcalc-goals` in [goal-and-requirements.md](goal-and-requirements.md).
 
 ## Drivers and stack decision
 
@@ -115,7 +115,7 @@ The pure core uses normally discovered Dart tests; widgets and application contr
 
 ## Design boundary
 
-This spec owns topology, stack rationale and cross-module invariants. The linked interaction, calculation, persistence and toolchain specs own their detailed contracts; their lifecycle status records whether review is complete. The core remains a pure Dart library within one Flutter application, not a separately published package with an independent dependency graph. Calculation code belongs under `lib/core`, orchestration under `lib/application`, Flutter features under `lib/features`, and adapters under `lib/data`; these are intended dependency boundaries, not directories already implemented.
+This spec owns topology, stack rationale and cross-module invariants. The linked interaction, calculation, persistence and toolchain specs own their detailed contracts; their lifecycle status records whether review is complete. The core remains a pure Dart library within one Flutter application, not a separately published package with an independent dependency graph. Calculation code belongs under `lib/core`, orchestration under `lib/application`, Flutter features under `lib/features`, and adapters under `lib/data`. The scaffold represents these boundaries; empty module directories do not constitute implemented responsibilities. The composition root wires Riverpod around a clearly labeled unfinished foundation screen, with no calculator controls, onboarding, database initialization, or runtime network dependency. This avoids implying functional or durable behavior before its owning contracts are implemented and verified.
 
 Design approval is not implementation, installation, execution or branch/PR-closeout authority. [implementation-readiness.md](implementation-readiness.md) records design review and separates remaining execution/acceptance gates from unresolved product decisions. No implementation slice may invent missing behavior or silently weaken a contract.
 

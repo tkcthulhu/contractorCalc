@@ -1,5 +1,7 @@
 # ContractorCalc design-readiness record
 
+The design-only task below is historical. The subsequent separately authorized foundation delivery is recorded at the end of this file; it does not retroactively expand design-task authority or establish complete feature/platform acceptance.
+
 ## Task and authority
 
 - **Request:** resolve the implementation-design blockers identified after the architecture selection, before branch closeout. The preceding design-only boundary remains in force.
@@ -82,3 +84,21 @@ No application processes, test databases, installations, downloaded SDK archives
 There are no unresolved product/architecture contract decisions from this design task. This is a design-readiness conclusion, not proof of mathematical correctness, a solved package graph, supported-device execution, or release readiness. No application code, manifests, lockfiles, native projects, tests, installed dependencies or running services were created. No independent review, hosted CI, signing, deployment, tracker synchronization, or branch/PR closure is claimed.
 
 Execution prerequisites remain explicit: a scoped implementation grant, safe isolated bootstrap targets, the selected SDK/native toolchain, a Mac/Xcode/signing route when applicable, and real minimum-family/device environments. Their unavailable or unexecuted state blocks only the corresponding bootstrap/platform/feature acceptance. Future project planning should reconcile the actual GitHub tracker under a separately scoped remote-write grant; this local design record does not grant it.
+
+## Subsequent authorized foundation delivery — 2026-10-24
+
+The user separately requested implementation of project scaffolding, confirmed a clearly labeled unfinished app shell with no calculator/storage functionality, selected task-local SDK bootstrap, development identity `com.example.contractorcalc`, and GitHub checks without remote mutations, then explicitly approved the bounded design. Baseline was the clean `f0fe518` checkout. This grant superseded the preceding no-implementation boundary only for the foundation slice; no global installs, license acceptance, signing, device actions, or branch/PR closeout were authorized.
+
+The root Flutter application now has generated Android/iOS projects, the exact approved direct dependencies and resolved lockfile, a Riverpod composition root, an unfinished foundation screen, module boundaries, normal-suite foundation tests, and shared local/CI verification. Architecture/toolchain owners describe the lasting decisions; [README.md](README.md) describes setup. No solver, schema, repository, onboarding, tape, memory, or preset behavior was added. iOS backup exclusion, native resolution locks and device suites remain storage/native implementation obligations rather than fabricated artifacts.
+
+Observed local evidence on Linux x64:
+
+- Official SDK metadata and installed identity agree on Flutter 3.47.8, commit `737ba8f885dc774b53b442759999a312c9461e4e`, Dart 3.13.7; Linux archive SHA-256 matched.
+- Initial exact resolution and subsequent `flutter pub get --enforce-lockfile` passed without overrides; resolved analyzer 14.6.0 and SDK test_api 0.7.12 coexist. Full graph and dependency license-file inventory were inspected. SDK test packages inherit Flutter's root license; an inventory is not a complete redistribution/legal review.
+- `bash tool/verify.sh` passed end to end: seven tooling tests, static native configuration checks, locked resolution, generation, formatting, analysis, five Flutter tests, and lock/generated-output drift checks. The core guard protects imports, not mathematical behavior; widget layout checks are not device accessibility acceptance.
+- Flutter's template bundled a Gradle 2.10 wrapper; its comparison with the published 9.3.1 checksum failed. The official 9.3.1 JAR/launchers replaced it and the published JAR/distribution checksums matched. No version override or AGP/Kotlin integration change was needed.
+- Original failed constructor analysis and widget semantics-resource-lifetime runs were corrected without removing assertions. A newly written static checker initially assumed an obsolete framework-plist key; it now checks iOS's actual project deployment declarations rather than imposing a nonexistent template field. Failed and final logs are retained under ignored `.local/evidence/`; source/locks and checks remain in Git-managed files.
+
+Native Android/iOS builds, mobile SQLite version/features and packaging, both Android release ABIs, 16 KB environments, minimum/current-device installs, offline/restart/backup workflows, and screen-reader verification were not executed. Android/JDK and Mac/Xcode/device targets are unavailable here. No release, hosted-CI success, publication, independent review, tracker synchronization, or human implementation acceptance is claimed. The workflow file is configured, not remotely executed. These missing gates block their corresponding acceptance units, not the independently verified foundation.
+
+Task-local retained resources at handoff: approximately 4.0 GiB `.toolchain/` (SDK/archive), 307 MiB `.local/` (caches and compact evidence), 79 MiB `.dart_tool/`, and 51 MiB `build/`. Bulk is reconstructible from the baseline/locks; original logs and unique diagnostics are compact evidence. No project byte threshold or automatic cleanup grant exists. The workspace owner decides SDK/cache reuse or release at the next handoff; no global/shared caches or human databases were changed or deleted. GitHub coordination remains pending a separately scoped grant. The next authorized stop is handoff for human review, not a subsequent feature slice or PR operation.
